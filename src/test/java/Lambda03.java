@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class Lambda03 {
 
@@ -29,6 +30,65 @@ public class Lambda03 {
         // w harfiyle başlayan yemek olmaması gerektiğini test et
         wHarfiyleBaslayanYemekOlmamali(menu);
 
+        // x harfi ile başlayan yemek var mı kontrol edeceğiz
+        xHarfiIleBaslayanYemekVarMi(menu);
+
+        // menüde karakter sayısı en fazla olan yemeği yazdırın
+        karacterSayisiEnFazlaOlanYemekYazdir(menu);
+
+        // yemekleri son harfine göre sıralayıp ilk elemanı yazdırmayın
+        sonHarfeGoreSiralaIlkYemegiAtla(menu);
+
+
+
+    }
+
+    public static void sonHarfeGoreSiralaIlkYemegiAtla(List<String> menu) {
+        System.out.println("\nYemekler son harfine gore sıralandı, ilk yemek atlandı");
+        menu
+                .stream()
+                .sorted(Comparator.comparing(t -> t.charAt(t.length()-1)))
+                .skip(1)
+                .forEach(t -> System.out.print(t + " "));
+
+
+    }
+
+    public static void karacterSayisiEnFazlaOlanYemekYazdir(List<String> menu) {
+        System.out.println("\nEn çok harfli yemek : ");
+        System.out.println(menu
+                .stream()
+                .sorted(Comparator.comparing(t -> t.toString().length()).reversed())
+                //.findFirst()); birinci yemek değilde en uzun ilk üç yemeği görmek isteseydik
+                .limit(3));  // limit() fonksiyonu bir Stream bize döndürdüğü için direk print yapamıyoruz
+
+
+        Stream<String> ilkUcYemek =menu
+                .stream()
+                .sorted(Comparator.comparing(t -> t.toString().length()).reversed())
+                //.findFirst()); birinci yemek değilde en uzun ilk üç yemeği görmek isteseydik
+                .limit(3);
+
+        System.out.println(Arrays.toString(ilkUcYemek.toArray())); // bir Stream'ı arraya çevirip, Arrays classından yardım isteyip yazdırabiliyoruz
+
+        System.out.println(Arrays.toString(menu.stream().sorted(Comparator.comparing(t -> t.toString().length()).reversed()).limit(3).toArray()));
+
+        // limit() eğer stream'den belli sayıdaki elemanları almak istersek kullanılır. Bize dönüş olarak bir stream döndürecektir. Bu yüzden direk yazdırılması
+        // mümkün değildir. Bu streamın yazdırılması için ilk olarak toArray() method ile array'e çevrilmeli sonra Arrays.toString() methodu ile yazdırılmalı
+
+
+    }
+
+    public static void xHarfiIleBaslayanYemekVarMi(List<String> menu) {
+        System.out.println("\nx harfiyle başlayan yemek var mı?");
+        System.out.println(menu
+                .stream()
+                .anyMatch(t -> t.startsWith("x")));   // bir tane yemeğin x ile başlaması true döndürecektir
+
+        System.out.println(menu
+                .stream()
+                .anyMatch(t -> t.startsWith("x")) ? "x ile başlayan en az bir yemek ismi var" : "x ile başlayan yemek yohtir" );
+
     }
 
     public static void wHarfiyleBaslayanYemekOlmamali(List<String> menu) {
@@ -37,7 +97,7 @@ public class Lambda03 {
 
                 menu
                         .stream()
-                        .noneMatch(t -> t.startsWith("w"))
+                        .noneMatch(t -> t.startsWith("w")) // hiç birinin w harfi ile başlamaması gerekiyor, biri bile w harfi ile başlarsa false
 
 
         );
@@ -47,7 +107,7 @@ public class Lambda03 {
         System.out.println("\nlistede 7 karacterden az yemek ismi olmaması gerekiyor");
         System.out.println(menu
                 .stream()
-                .allMatch(t -> t.length() >= 7));
+                .allMatch(t -> t.length() >= 7));  // koşulun bütün elemanlar için doğru olduğu zaman true döner,
 
         boolean kontrol = menu
                 .stream()
